@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Payroll Management</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <header class="top">
+    <div class="brand">
+      <span class="logo" aria-hidden="true">P</span>
+      <div>
+        <h1>Payroll</h1>
+        <p>{{ company }}</p>
+      </div>
+    </div>
+    <div class="top-actions">
+      <button class="btn primary" id="openAdd">+ New employee</button>
+      <form method="post" action="{{ url_for('logout') }}">
+        <button class="btn outline" type="submit">Log out</button>
+      </form>
+    </div>
+  </header>
+
+  <main>
+    <section class="stats" aria-label="Summary">
+      <article class="stat hero">
+        <span>Net payroll this month</span>
+        <strong id="statPayroll">0</strong>
+      </article>
+      <article class="stat"><span>Employees</span><strong id="statEmployees">0</strong></article>
+      <article class="stat"><span>Departments</span><strong id="statDepts">0</strong></article>
+      <article class="stat"><span>Absent today</span><strong id="statAbsent">0</strong></article>
+    </section>
+
+    <nav class="tabs" role="tablist">
+      <button class="tab active" data-tab="employees" role="tab">Employees</button>
+      <button class="tab" data-tab="attendance" role="tab">Attendance</button>
+      <button class="tab" data-tab="payroll" role="tab">Payroll &amp; salary slips</button>
+    </nav>
+
+    <section id="tab-employees" class="panel">
+      <div class="panel-head">
+        <input type="search" id="search" placeholder="Search by name, ID or department">
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>ID</th><th>Name</th><th>Department</th><th>Designation</th><th class="num">Basic</th><th class="num">Allowances</th><th class="actions">Actions</th></tr>
+          </thead>
+          <tbody id="employeesBody"></tbody>
+        </table>
+      </div>
+      <p class="empty" id="emptyEmployees" hidden>No employees yet. Click "New employee" to add the first one.</p>
+    </section>
+
+    <section id="tab-attendance" class="panel" hidden>
+      <div class="inline-form">
+        <label>Date <input type="date" id="attDate"></label>
+        <button class="btn ghost" id="markAll" type="button">Mark all present</button>
+        <button class="btn primary" id="saveAtt" type="button">Save attendance</button>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>ID</th><th>Name</th><th>Department</th><th>Status</th></tr></thead>
+          <tbody id="attBody"></tbody>
+        </table>
+      </div>
+      <p class="empty" id="emptyAtt" hidden>No employees for this date.</p>
+      <p class="hint">Days with no saved attendance are counted as Present when salary is calculated. Leave is paid; Absent is unpaid; Half day is half unpaid.</p>
+    </section>
+
+    <section id="tab-payroll" class="panel" hidden>
+      <div class="inline-form">
+        <label>Month <input type="month" id="payMonth"></label>
+      </div>
+      <div class="pay-totals">
+        <div><span>Total gross</span><strong id="totGross">0</strong></div>
+        <div><span>Total deductions</span><strong id="totDed">0</strong></div>
+        <div><span>Total net payable</span><strong id="totNet">0</strong></div>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>ID</th><th>Name</th><th class="num">Present</th><th class="num">Absent</th><th class="num">Gross</th><th class="num">Deductions</th><th class="num">Net salary</th><th class="actions">Slip</th></tr>
+          </thead>
+          <tbody id="payBody"></tbody>
+        </table>
+      </div>
+      <p class="empty" id="emptyPay" hidden>No employees for this month.</p>
+      <p class="hint">Gross = basic + 20% HRA + allowances. Deductions = 12% PF of basic + (gross &divide; days in month) &times; unpaid days.</p>
+    </section>
+  </main>
+
+  <dialog id="modal">
+    <form method="dialog" id="modalForm" autocomplete="off">
+      <h2 id="modalTitle"></h2>
+      <div id="modalFields"></div>
+      <p class="form-error" id="modalError" role="alert" hidden></p>
+      <div class="modal-actions">
+        <button type="button" class="btn ghost" id="modalCancel">Cancel</button>
+        <button type="submit" class="btn primary" id="modalSubmit">Save</button>
+      </div>
+    </form>
+  </dialog>
+
+  <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+  <script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>

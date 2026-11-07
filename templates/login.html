@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Admin login - Payroll</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body class="login-page">
+  <main class="login-card">
+    <div class="brand dark">
+      <span class="logo" aria-hidden="true">P</span>
+      <div>
+        <h1>Payroll</h1>
+        <p>{{ company }}</p>
+      </div>
+    </div>
+    <h2>Admin sign in</h2>
+    <p class="hint">Only the administrator can manage employees and salaries.</p>
+    <form method="post" action="{{ url_for('login') }}" autocomplete="off">
+      <label class="field">Username
+        <input name="username" required autofocus autocomplete="username">
+      </label>
+      <label class="field">Password
+        <input name="password" type="password" required autocomplete="current-password">
+      </label>
+      {% if message %}<p class="form-error" role="alert">{{ message }}</p>{% endif %}
+      <button class="btn primary wide" type="submit">Sign in</button>
+    </form>
+  </main>
+</body>
+</html>
